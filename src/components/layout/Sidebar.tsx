@@ -5,16 +5,30 @@ import { GoColumns as ColumnsIcon } from "react-icons/go";
 import { IoAddOutline, IoHelpBuoyOutline as RescueIcon} from "react-icons/io5";
 import { CiSettings as SettingIcon } from "react-icons/ci";
 import { HiChevronUpDown as ChevronUpDowm } from "react-icons/hi2";
+import { CreateProjectModal } from '../modals/CreateProjectModal';
+import { projectsApi, authApi } from '../../api';
+
 interface SidebarProps {
   activeId?: string;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ activeId = 'home' }) => {
-  const projects = [
-    'Personal',
-    'Trabajo',
-    'Estudios'
-  ];
+  const [projects, setProjects] = React.useState<Array<{ _id: string; name: string }>>([]);
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const user = authApi.getCurrentUser();
+
+  const loadProjects = React.useCallback(async () => {
+    try {
+      const data = await projectsApi.getAll();
+      setProjects(data);
+    } catch (error) {
+      console.error('Error loading projects:', error);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    loadProjects();
+  }, [loadProjects]);
 
   const menuItems = [
     { id: 'home', icon: HomeIcon, label: 'Mi día' },
@@ -54,18 +68,21 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeId = 'home' }) => {
             <span className="text-[13px] text-text-primary uppercase tracking-wider font-medium">
               Mis Listas
             </span>
-            <button className="text-text-secondary hover:text-text-primary transition-colors">
+            <button 
+              onClick={() => setIsModalOpen(true)}
+              className="text-text-secondary hover:text-text-primary transition-colors"
+            >
               <IoAddOutline size={18} />
             </button>
           </div>
           <div className="space-y-1">
-            {projects.map((project, index) => (
+            {projects.map((project) => (
               <button
-                key={index}
+                key={project._id}
                 className="w-full flex items-center gap-3 py-2.5 rounded-lg text-[16px] text-text-secondary hover:bg-bg-surfaceAlt hover:text-text-primary transition-colors"
               >
-                <div className="w-2 h-2 rounded-full shrink-0" />
-                <span>{project}</span>
+                <div className="w-2 h-2 rounded-full bg-brand-primary shrink-0" />
+                <span>{project.name}</span>
               </button>
             ))}
           </div>
@@ -103,19 +120,25 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeId = 'home' }) => {
         <div className="bg-bg-surfaceAlt rounded-lg p-3 flex items-center gap-3">
           <div className="relative">
             <div className="w-10 h-10 bg-brand-dark rounded-full bg-linear-to-br flex items-center justify-center text-white font-medium">
-              
+              {user?.name?.charAt(0).toUpperCase() || 'U'}
             </div>
             <div className="absolute bottom-0 right-0 w-3 h-3 bg-status-online rounded-full border-2 border-bg-surfaceAlt" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-[14px] text-text-primary font-medium truncate">Roger</p>
-            <p className="text-[12px] text-text-muted truncate">roger@untitledui.com</p>
+            <p className="text-[14px] text-text-primary font-medium truncate">{user?.name || 'Usuario'}</p>
+            <p className="text-[12px] text-text-muted truncate">{user?.email || 'email@example.com'}</p>
           </div>
           <button className="text-text-secondary hover:text-text-primary transition-colors">
             <ChevronUpDowm size={18} className='text-text-muted' />
           </button>
         </div>
       </div>
+
+      <CreateProjectModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        onProjectCreated={loadProjects}
+      />
     </aside>
   );
 };
