@@ -1,66 +1,62 @@
 import React from "react";
-import { MainLayout } from "../components/layout/MainLayout";
-import { CalendarSection } from "../components/organisms/CalendarSection";
-import { TaskList } from "../components/organisms/TaskList";
-import { InputBar } from "../components/molecules/InputBar";
-import { useAppData } from "../hooks/useAppData";
+import { Sidebar } from "../components/layout/Sidebar";
+import { Greeting } from "../components/molecules/Greeting";
+import { CalendarWidget } from "../components/molecules/CalendarWidget";
+import { TasksWidget } from "../components/molecules/TasksWidget";
+import { AddTaskInput } from "../components/molecules/AddTaskInput";
 
 export const HomeDesktop: React.FC = () => {
-  const { tasks, events, toggleTask, addTask, connectCalendar } = useAppData();
+  const [tasks, setTasks] = React.useState([
+    { id: '1', title: 'Comprar regalo', category: 'MIS LISTAS', list: 'PERSONAL', completed: false },
+    { id: '2', title: 'Planear Menú', category: 'MIS LISTAS', list: 'PERSONAL', completed: false },
+  ]);
 
-  const today = new Date();
-  const date = {
-    month: today.toLocaleDateString('es-ES', { month: 'short' }).toUpperCase(),
-    day: today.getDate(),
+  const events = [
+    { time: '8:00-9:00', title: 'Reunión Mónica'},
+    { time: '11:00-12:00', title: 'Status equipo'}
+  ];
+
+  const handleToggleTask = (id: string) => {
+    setTasks(tasks.map(task => 
+      task.id === id ? { ...task, completed: !task.completed } : task
+    ));
+  };
+
+  const handleAddTask = (title: string) => {
+    setTasks([...tasks, {
+      id: Date.now().toString(),
+      title,
+      category: 'MIS LISTAS',
+      list: 'PERSONAL',
+      completed: false
+    }]);
   };
 
   return (
-    <MainLayout activeNavId="home">
-      <div className="h-full overflow-y-auto">
-        <div className="max-w-4xl mx-auto px-12 py-10">
-          {/* Greeting */}
-          <h1 className="font-display text-[40px] leading-[52px] font-bold mb-8">
-            Buenos días, Roger
-          </h1>
+    <div className="flex h-screen bg-bg-app text-text-primary overflow-hidden">
+      <Sidebar activeId="home" />
 
-          {/* Calendar Section */}
-          <section className="mb-8">
-            <h2 className="font-sans text-[18px] leading-[26px] font-medium mb-4">Calendario</h2>
-            <CalendarSection
-              date={date}
-              events={events}
-              onConnectCalendar={connectCalendar}
-            />
-          </section>
-
-          {/* Tasks Section */}
-          <section className="mb-8">
-            <h2 className="font-sans text-[18px] leading-[26px] font-medium mb-4">Tareas</h2>
-            <div className="bg-bg-surface rounded-2xl p-4">
-              <TaskList 
-                tasks={tasks}
-                onToggleTask={toggleTask}
-              />
+      <main className="flex-1 overflow-y-auto max-w-4xl">
+        <div className="mx-auto pl-24 min-h-screen flex flex-col">
+          <div className="flex-1 space-y-8">
+            <Greeting name="Roger" className="lg:pt-[52px]" />
+            
+            <div>
+              <h2 className="text-[24px] font-medium mb-4">Calendario</h2>
+              <CalendarWidget month="MAR" day={21} events={events} />
             </div>
-          </section>
+            
+            <div>
+              <h2 className="text-[24px] font-medium mb-4">Tareas</h2>
+              <TasksWidget tasks={tasks} onToggle={handleToggleTask} />
+            </div>
+          </div>
 
-          {/* Input Bar */}
-          <div className="max-w-2xl">
-            <InputBar 
-              placeholder="Agregar tarea"
-              onSubmit={addTask}
-              actionButton={
-                <button className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-bg-surfaceAlt hover:bg-bg-surface transition-colors">
-                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="text-text-primary">
-                    <line x1="8" y1="3" x2="8" y2="13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                    <line x1="3" y1="8" x2="13" y2="8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                </button>
-              }
-            />
+          <div className="mt-auto pt-8 pb-8">
+            <AddTaskInput onAdd={handleAddTask} />
           </div>
         </div>
-      </div>
-    </MainLayout>
+      </main>
+    </div>
   );
 };

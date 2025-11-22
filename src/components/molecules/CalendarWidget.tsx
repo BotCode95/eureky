@@ -17,7 +17,6 @@ export const CalendarWidget: React.FC<CalendarWidgetProps> = ({ month, day, even
   return (
     <div className="bg-bg-surface rounded-lg p-6">
       <div className="flex gap-6 items-center">
-        {/* Date Box - 41x71 */}
         <div className="w-[41px] shrink-0 rounded-lg flex flex-col items-center justify-center py-2">
           <span className="text-[18px] font-bold text-text-primary tracking-wider uppercase">
             {month}
@@ -27,7 +26,6 @@ export const CalendarWidget: React.FC<CalendarWidgetProps> = ({ month, day, even
           </span>
         </div>
 
-        {/* Events List - each row h-6 (24px) with gap-7 (27px) */}
         <div className="flex-1 space-y-0 min-w-0">
           {events.map((event, index) => (
             <div key={index} className="flex items-center space-around gap-4 h-6">

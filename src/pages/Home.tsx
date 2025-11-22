@@ -3,11 +3,11 @@ import { HomeMobile } from "./HomeMobile";
 import { HomeDesktop } from "./HomeDesktop";
 
 export const Home: React.FC = () => {
-  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 768);
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth < 1024);
 
   React.useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 1024);
     };
 
     window.addEventListener('resize', handleResize);

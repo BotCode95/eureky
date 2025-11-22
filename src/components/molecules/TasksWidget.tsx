@@ -18,7 +18,6 @@ export const TasksWidget: React.FC<TasksWidgetProps> = ({ tasks, onToggle }) => 
     <div className="space-y-4">
       {tasks.map((task) => (
         <div key={task.id} className="bg-bg-surface rounded-lg p-4 flex items-center justify-between gap-4">
-          {/* Checkbox - 16x16 */}
           <div className='flex items-center gap-5'>
           <button
             onClick={() => onToggle(task.id)}

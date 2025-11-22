@@ -30,13 +30,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 }) => {
   return (
     <aside className="hidden md:flex md:w-60 flex-col bg-bg-surface border-r border-bg-surfaceAlt/50 h-screen overflow-y-auto">
-      {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 py-5">
         <Logo className="h-5 w-auto" />
         <span className="text-[15px] leading-[20px] font-semibold">eureky</span>
       </div>
 
-      {/* Main Navigation */}
       <nav className="flex-1 px-3 pt-2">
         <div className="space-y-0.5">
           {mainNavItems.map((item) => {
@@ -60,7 +58,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
           })}
         </div>
 
-        {/* Lists Section */}
         <div className="mt-6">
           <div className="flex items-center justify-between px-3 mb-2">
             <span className="text-[11px] leading-[14px] font-semibold text-text-muted uppercase tracking-[0.08em]">
@@ -89,7 +86,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </nav>
 
-      {/* Bottom Section */}
       <div className="p-3 border-t border-bg-surfaceAlt/50 space-y-3">
         <Button variant="primary" className="w-full text-[13px] leading-[18px]" size="md">
           Mejora tu plan
