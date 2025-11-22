@@ -1,0 +1,104 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Figtree:wght@700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  /* Colors */
+  --color-bg-app: #050912;
+  --color-bg-surface: #0F1521;
+  --color-bg-surfaceAlt: #1C273E;
+  
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #CDCEDF;
+  --color-text-muted: #444358;
+  
+  --color-brand-dark: #242865;
+  --color-brand-primary: #4E36AF;
+  --color-brand-soft: #5E49B1;
+  --color-brand-link: #99A2FE;
+  
+  --color-status-online: #4AC27B;
+  
+  /* Fonts */
+  --font-display: Figtree, system-ui, sans-serif;
+  --font-sans: "DM Sans", system-ui, sans-serif;
+  
+  /* Font Sizes - Mobile First */
+  --font-size-display-lg: 32px;
+  --font-size-display-lg--line-height: 40px;
+  
+  --font-size-display-md: 28px;
+  --font-size-display-md--line-height: 36px;
+  
+  --font-size-label-xl: 20px;
+  --font-size-label-xl--line-height: 28px;
+  
+  --font-size-label-lg: 18px;
+  --font-size-label-lg--line-height: 24px;
+  
+  --font-size-body-md: 16px;
+  --font-size-body-md--line-height: 24px;
+  
+  --font-size-body-sm: 14px;
+  --font-size-body-sm--line-height: 20px;
+  
+  --font-size-body-xs: 12px;
+  --font-size-body-xs--line-height: 16px;
+  
+  /* Spacing */
+  --spacing-page-mobile: 16px;
+  --spacing-page-desktop: 32px;
+  --spacing-section: 24px;
+  
+  /* Border Radius */
+  --radius-pill: 999px;
+  --radius-xl: 16px;
+  --radius-lg: 12px;
+  --radius-md: 8px;
+  
+  /* Breakpoints */
+  --breakpoint-mobile: 375px;
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1024px;
+  --breakpoint-wide: 1440px;
+}
+
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: var(--color-bg-app);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Mobile container - 375px */
+@media (max-width: 767px) {
+  .container {
+    max-width: 375px;
+    margin: 0 auto;
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-app);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-bg-surfaceAlt);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-muted);
+}
