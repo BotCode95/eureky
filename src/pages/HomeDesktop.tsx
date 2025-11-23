@@ -19,17 +19,7 @@ export const HomeDesktop: React.FC = () => {
     { time: '11:00-12:00', title: 'Status equipo'}
   ];
 
-  React.useEffect(() => {
-    loadProjects();
-  }, []);
-
-  React.useEffect(() => {
-    if (selectedProjectId) {
-      loadTasksByProject(selectedProjectId);
-    }
-  }, [selectedProjectId]);
-
-  const loadProjects = async () => {
+  const loadProjects = React.useCallback(async () => {
     try {
       const projects = await projectsApi.getAll();
       if (projects.length > 0) {
@@ -38,9 +28,9 @@ export const HomeDesktop: React.FC = () => {
     } catch (error) {
       console.error('Error loading projects:', error);
     }
-  };
+  }, []);
 
-  const loadTasksByProject = async (projectId: string) => {
+  const loadTasksByProject = React.useCallback(async (projectId: string) => {
     try {
       const projectTasks = await tasksApi.getByProject(projectId);
       const project = await projectsApi.getById(projectId);
@@ -60,13 +50,23 @@ export const HomeDesktop: React.FC = () => {
       console.error('Error loading tasks:', error);
       setTasks([]);
     }
-  };
+  }, []);
 
-  const loadTasks = () => {
+  const loadTasks = React.useCallback(() => {
     if (selectedProjectId) {
       loadTasksByProject(selectedProjectId);
     }
-  };
+  }, [selectedProjectId, loadTasksByProject]);
+
+  React.useEffect(() => {
+    loadProjects();
+  }, [loadProjects]);
+
+  React.useEffect(() => {
+    if (selectedProjectId) {
+      loadTasksByProject(selectedProjectId);
+    }
+  }, [selectedProjectId, loadTasksByProject]);
 
   const handleToggleTask = async (id: string) => {
     try {
