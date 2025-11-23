@@ -10,9 +10,11 @@ import { projectsApi, authApi } from '../../api';
 
 interface SidebarProps {
   activeId?: string;
+  selectedProjectId?: string;
+  onProjectSelect?: (projectId: string) => void;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({ activeId = 'home' }) => {
+export const Sidebar: React.FC<SidebarProps> = ({ activeId = 'home', selectedProjectId, onProjectSelect }) => {
   const [projects, setProjects] = React.useState<Array<{ _id: string; name: string }>>([]);
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const user = authApi.getCurrentUser();
@@ -79,9 +81,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeId = 'home' }) => {
             {projects.map((project) => (
               <button
                 key={project._id}
-                className="w-full flex items-center gap-3 py-2.5 rounded-lg text-[16px] text-text-secondary hover:bg-bg-surfaceAlt hover:text-text-primary transition-colors"
+                onClick={() => onProjectSelect?.(project._id)}
+                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg text-[14px] transition-colors ${
+                  selectedProjectId === project._id
+                    ? 'bg-bg-surfaceAlt text-text-primary'
+                    : 'text-text-secondary hover:bg-bg-surfaceAlt hover:text-text-primary'
+                }`}
               >
-                <div className="w-2 h-2 rounded-full bg-brand-primary shrink-0" />
                 <span>{project.name}</span>
               </button>
             ))}

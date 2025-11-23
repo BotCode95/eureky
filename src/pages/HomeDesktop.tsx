@@ -11,6 +11,7 @@ import { toast } from 'react-toastify';
 export const HomeDesktop: React.FC = () => {
   const [tasks, setTasks] = React.useState<Array<{ id: string; title: string; category: string; list: string; completed: boolean }>>([]);
   const [isTaskModalOpen, setIsTaskModalOpen] = React.useState(false);
+  const [selectedProjectId, setSelectedProjectId] = React.useState<string>('');
   const user = authApi.getCurrentUser();
 
   const events = [
@@ -19,32 +20,51 @@ export const HomeDesktop: React.FC = () => {
   ];
 
   React.useEffect(() => {
-    loadTasks();
+    loadProjects();
   }, []);
 
-  const loadTasks = async () => {
+  React.useEffect(() => {
+    if (selectedProjectId) {
+      loadTasksByProject(selectedProjectId);
+    }
+  }, [selectedProjectId]);
+
+  const loadProjects = async () => {
     try {
       const projects = await projectsApi.getAll();
-      const allTasks: Array<{ id: string; title: string; category: string; list: string; completed: boolean }> = [];
-      
-      for (const project of projects) {
-        const projectTasks = await tasksApi.getByProject(project._id);
-        projectTasks.forEach((task: Task) => {
-          if (task.status !== 'done') {
-            allTasks.push({
-              id: task._id,
-              title: task.name,
-              category: 'MIS LISTAS',
-              list: project.name.toUpperCase(),
-              completed: false
-            });
-          }
-        });
+      if (projects.length > 0) {
+        setSelectedProjectId(projects[0]._id);
       }
+    } catch (error) {
+      console.error('Error loading projects:', error);
+    }
+  };
+
+  const loadTasksByProject = async (projectId: string) => {
+    try {
+      const projectTasks = await tasksApi.getByProject(projectId);
+      const project = await projectsApi.getById(projectId);
       
-      setTasks(allTasks);
+      const formattedTasks = projectTasks
+        .filter((task: Task) => task.status !== 'done')
+        .map((task: Task) => ({
+          id: task._id,
+          title: task.name,
+          category: 'MIS LISTAS',
+          list: project.name.toUpperCase(),
+          completed: false
+        }));
+      
+      setTasks(formattedTasks);
     } catch (error) {
       console.error('Error loading tasks:', error);
+      setTasks([]);
+    }
+  };
+
+  const loadTasks = () => {
+    if (selectedProjectId) {
+      loadTasksByProject(selectedProjectId);
     }
   };
 
@@ -65,7 +85,11 @@ export const HomeDesktop: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-bg-app text-text-primary overflow-hidden">
-      <Sidebar activeId="home" />
+      <Sidebar 
+        activeId="home" 
+        selectedProjectId={selectedProjectId}
+        onProjectSelect={setSelectedProjectId}
+      />
 
       <main className="flex-1 overflow-y-auto max-w-4xl">
         <div className="mx-auto pl-24 min-h-screen flex flex-col">
